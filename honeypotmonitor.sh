@@ -1,6 +1,16 @@
 #!/bin/bash
 honeyPotLogFile="/var/log/xrdp.log"
 
+if [ $# -eq 0 ];
+then
+    echo "No arguments supplied, will use default time between honeypot log polls (30 seconds)"
+    secondsBetweenHoneypotLogPolls=30
+else
+    echo "Using supplied timeout of $1 seconds between honeypot log polls"
+    secondsBetweenHoneypotLogPolls=$1
+fi
+
+
 function updateHoneyPotLogModifiedTimeAndBeepIfChanged()
 {
     lastHoneyPotLogModifiedTime=$honeyPotLogModifiedTime
@@ -25,7 +35,7 @@ while [  1 -lt 2 ]; do
     sudo cat $honeyPotLogFile | grep USER:
     echo "$(date) <--- this is now"
     pitemp.sh
-    sleep 30
+    sleep $secondsBetweenHoneypotLogPolls
 done
 
 
